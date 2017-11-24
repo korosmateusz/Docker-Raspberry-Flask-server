@@ -3,21 +3,28 @@
 from flask import Flask, request
 import os
 from multiprocessing import Lock
+from IPy import IP
 
 mutex = Lock()
-logdir = 'logs'
-logfile = logdir + '/data.log'
+logdir = 'logs/'
 app = Flask(__name__)
 
 @app.route('/', methods = ['GET', 'POST'])
 def getData():
     if request.method == 'GET':
+        ip = request.args.get('ip', type = str)
+        try:
+            IP(ip)
+        except:
+            return 'Please specify proper IP'
+        logfile = logdir + ip
         with mutex:
             if not os.path.isfile(logfile):
                 return 'No data received yet'
             with open(logfile, 'r') as f:
                 return f.read()
     elif request.headers['Content-Type'] == 'text/plain':
+        logfile = logdir + request.remote_addr
         with mutex:
             with open(logfile, 'ab+') as f:
                 f.write(request.data + '\n')
