@@ -1,9 +1,10 @@
 #!/usr/bin/python
 
 from flask import Flask, request
-import os
 from multiprocessing import Lock
 from IPy import IP
+import os
+import time
 
 mutex = Lock()
 logdir = 'logs/'
@@ -27,7 +28,7 @@ def getData():
         logfile = logdir + request.remote_addr
         with mutex:
             with open(logfile, 'ab+') as f:
-                f.write(request.data + '\n')
+                f.write(time.strftime('%Y.%m.%d, %H:%M:%S >> ' ) + request.data + '\n')
             return 'Received data: ' + request.data
 
 if __name__ == '__main__':
