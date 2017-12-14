@@ -8,6 +8,7 @@ import time
 
 mutex = Lock()
 logdir = 'logs/'
+certificatedir = 'certificate/'
 app = Flask(__name__)
 
 @app.route('/', methods = ['GET', 'POST'])
@@ -35,4 +36,4 @@ if __name__ == '__main__':
     with mutex:
         if not os.path.exists(logdir):
             os.makedirs(logdir)
-    app.run(debug=True, host='0.0.0.0')
+    app.run(debug=True, host='0.0.0.0', ssl_context=(certificatedir + 'cert.pem', certificatedir + 'key.pem'))

@@ -5,5 +5,6 @@ WORKDIR /server
 COPY requirements.txt /server
 RUN pip install -r requirements.txt
 COPY server.py /server
+COPY certificate /server/certificate
 ENTRYPOINT ["python"]
 CMD ["server.py"]
